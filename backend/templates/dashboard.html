@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CityPulse AI Dashboard</title>
+
+    <style>
+        body{
+            margin:0;
+            font-family: Arial, Helvetica, sans-serif;
+            background:#0f172a;
+            color:white;
+            text-align:center;
+        }
+
+        h1{
+            margin-top:20px;
+        }
+
+        .cards{
+            display:flex;
+            justify-content:center;
+            gap:25px;
+            margin-top:30px;
+        }
+
+        .card{
+            padding:20px;
+            width:180px;
+            border-radius:10px;
+            font-size:20px;
+            font-weight:bold;
+        }
+
+        .low{ background:green; }
+        .medium{ background:orange; }
+        .high{ background:red; }
+
+        table{
+            margin:40px auto;
+            border-collapse:collapse;
+            width:70%;
+        }
+
+        th, td{
+            border:1px solid #444;
+            padding:10px;
+        }
+
+        th{
+            background:#1e293b;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🚨 CityPulse AI Dashboard</h1>
+
+<div class="cards">
+    <div class="card low">
+        <div id="lowCount">0</div>
+        LOW
+    </div>
+
+    <div class="card medium">
+        <div id="mediumCount">0</div>
+        MEDIUM
+    </div>
+
+    <div class="card high">
+        <div id="highCount">0</div>
+        HIGH
+    </div>
+</div>
+
+<h2>Submitted Reports</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>District</th>
+            <th>Area</th>
+            <th>Risk</th>
+        </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+</table>
+
+<script>
+
+async function loadData(){
+    const res = await fetch("/map-data");
+    const data = await res.json();
+
+    let low=0, medium=0, high=0;
+    const table = document.getElementById("tableBody");
+    table.innerHTML="";
+
+    data.forEach(r => {
+
+        if(r.level==="LOW") low++;
+        else if(r.level==="MEDIUM") medium++;
+        else if(r.level==="HIGH") high++;
+
+        table.innerHTML += `
+            <tr>
+                <td>${r.district}</td>
+                <td>${r.area}</td>
+                <td>${r.level}</td>
+            </tr>
+        `;
+    });
+
+    document.getElementById("lowCount").innerText = low;
+    document.getElementById("mediumCount").innerText = medium;
+    document.getElementById("highCount").innerText = high;
+}
+
+loadData();
+setInterval(loadData,3000);
+
+</script>
+
+</body>
+</html>

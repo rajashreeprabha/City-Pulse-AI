@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Emergency Health Reporting</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin:0;
+    font-family:'Poppins', sans-serif;
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.container {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(15px);
+    padding:30px;
+    border-radius:18px;
+    width:420px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.4);
+}
+
+h1 {
+    text-align:center;
+    font-size:20px;
+    margin-bottom:5px;
+}
+
+.subtitle{
+    text-align:center;
+    font-size:13px;
+    color:#ddd;
+    margin-bottom:20px;
+}
+
+label {
+    font-size:13px;
+}
+
+input, select {
+    width:100%;
+    padding:10px;
+    margin-top:6px;
+    margin-bottom:14px;
+    border-radius:8px;
+    border:none;
+}
+
+button {
+    width:100%;
+    padding:12px;
+    background:#ff3b3b;
+    border:none;
+    color:white;
+    font-size:16px;
+    border-radius:10px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover {
+    background:#ff1f1f;
+}
+
+.badge{
+    text-align:center;
+    font-size:12px;
+    margin-bottom:10px;
+    color:#90ee90;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="badge">🔒 Anonymous Submission • No personal data collected</div>
+
+<h1>🚨 Public Health Emergency Report</h1>
+<div class="subtitle">
+Help protect your district by reporting health & environmental conditions.
+</div>
+
+<form id="reportForm">
+
+<label>District</label>
+<select name="district" required>
+<option>Ariyalur</option>
+<option>Chennai</option>
+<option>Coimbatore</option>
+<option>Cuddalore</option>
+<option>Dharmapuri</option>
+<option>Dindigul</option>
+<option>Erode</option>
+<option>Kanchipuram</option>
+<option>Kanyakumari</option>
+<option>Karur</option>
+<option>Krishnagiri</option>
+<option>Madurai</option>
+<option>Nagapattinam</option>
+<option>Namakkal</option>
+<option>Nilgiris</option>
+<option>Perambalur</option>
+<option>Pudukkottai</option>
+<option>Ramanathapuram</option>
+<option>Salem</option>
+<option>Sivagangai</option>
+<option>Thanjavur</option>
+<option>Theni</option>
+<option>Thoothukudi</option>
+<option>Tiruchirappalli</option>
+<option>Tirunelveli</option>
+<option>Tiruppur</option>
+<option>Tiruvallur</option>
+<option>Tiruvannamalai</option>
+<option>Tiruvarur</option>
+<option>Vellore</option>
+<option>Viluppuram</option>
+<option>Virudhunagar</option>
+</select>
+
+<label>Area / Locality</label>
+<input type="text" name="area" placeholder="Eg: Anna Nagar" required>
+
+<label>Fever Cases (%)</label>
+<input type="number" name="fever" min="0" max="100" required>
+
+<label>Humidity</label>
+<input type="number" name="humidity" min="0" max="100" required>
+
+<label>Recent Rain</label>
+<select name="rain">
+<option value="1">Yes</option>
+<option value="0">No</option>
+</select>
+
+<label>Air Quality Index (AQI)</label>
+<input type="number" name="aqi" required>
+
+<button type="submit">🚨 Submit Report</button>
+
+</form>
+
+</div>
+
+<script>
+document.getElementById("reportForm").addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    const res = await fetch("/submit", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    if(result.message){
+        alert("✅ Report submitted successfully!");
+        e.target.reset();
+    }else{
+        alert("❌ Error submitting data");
+    }
+});
+</script>
+
+</body>
+</html>
